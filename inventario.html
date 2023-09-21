@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario</title>
+</head>
+<body>
+    <form action="/inventario" method="post">
+        <label for="codigo">Codigo*: </label>
+        <input type="number" id="txtCodigo" name="codigo" /> <br>
+        <label for="nombre">Nombre*:</label>
+        <input type="text" id="txtNombre" name="nombre" /> <br>
+        <label for="cantidad">Cantidad*:</label>
+        <input type="number" id="txtCantidad" name="cantidad"><br>
+        <label for="costo">Costo*:</label>
+        <input type="number" id="txtCosto" name="costo"><br>
+        <hr>
+        <button type="button" id="btnAdd">Agregar</button>
+        <button type="button" id="btnDelete">Eliminar</button>
+        <button type="button" id="btnSearch">Buscar</button> <br>
+        <button type="button" id="btnList">Mostrar inventario</button>
+        <button type="reset" id="reset">Resetear</button>
+    </form>
+    <div id="detalles">
+    </div>
+    <script>
+        class Inventario {
+            constructor(){
+                this.datos=[];
+            }
+            agregar(nuevo) {
+                //codigo para ir agregando ordenadamente por codigo
+                let i = 0;
+                while (i < this.datos.length && this.datos[i].codigo < nuevo.codigo) {
+                    i++;
+                }
+                for (let j = this.datos.length; j > i; j--) {
+                    this.datos[j] = this.datos[j - 1];
+                }
+                this.datos[i] = nuevo;
+
+                // //codigo para agregar sin ordenar
+                // this.datos.push(nuevo);
+            }
+            listar(){
+                return this.datos;
+            }
+            eliminar(codigo) {
+                for (let i = 0; i < this.datos.length; i++) {
+                    if (this.datos[i].codigo == codigo) {
+                        for (let j = i; j < this.datos.length - 1; j++) {
+                            this.datos[j] = this.datos[j + 1];
+                        }
+                        this.datos.pop();
+                        break;
+                    }
+                }
+            }
+            buscar(codigo){
+                for (let i = 0; i < this.datos.length; i++) {
+                    if (this.datos[i].codigo == codigo) {
+                        return this.datos[i];
+                    }
+                }
+                return null;
+            }
+        }
+
+        class Producto {
+            constructor (codigo, nombre, cantidad, costo){
+                this.codigo = codigo
+                this.nombre = nombre
+                this.cantidad = cantidad
+                this.costo = costo
+            }
+
+            info(){
+                return `Código: ${this.codigo} \n Nombre: ${this.nombre} \n Cantidad: ${this.cantidad} \n Costo: $${this.costo}`
+            }
+            infoHTML(){
+                return `<div>
+                        <h3> Producto: ${this.nombre}</h3>
+                        <p>Código de barras: ${this.codigo} <br>
+                        Cantidad en inventario: ${this.cantidad}<br>
+                        Costo por unidad: $${this.costo}</p>
+                    </div>`
+            }
+        }
+        const miInventario = new Inventario();
+        const bntAdd = document.getElementById('btnAdd');
+        bntAdd.addEventListener('click', () => {
+            let codigo = parseInt(document.getElementById('txtCodigo').value);
+            let nombre = document.getElementById('txtNombre').value;
+            let cantidad = parseInt(document.getElementById('txtCantidad').value);
+            let costo = parseFloat(document.getElementById('txtCosto').value);
+            let producto = new Producto(codigo, nombre, cantidad, costo);
+            miInventario.agregar(producto);
+            document.getElementById('detalles').innerHTML = `<h2> Se añadió: </h2> ${producto.infoHTML()}`;
+        });
+        const btnDelete = document.getElementById('btnDelete');
+        btnDelete.addEventListener('click', () => {
+            let codigo = parseInt(document.getElementById('txtCodigo').value);
+            miInventario.eliminar(codigo);
+            document.getElementById('detalles').innerHTML = `Se ha eliminado el artículo con el código ${codigo}`;
+        });
+        const btnSearch = document.getElementById('btnSearch');
+        btnSearch.addEventListener('click', () => {
+            let codigo = parseInt(document.getElementById('txtCodigo').value);
+            if(miInventario.buscar(codigo) == null)
+                document.getElementById('detalles').innerHTML = `<h2> No se encontró ningún artículo con ese código </h2>`;
+            else
+                document.getElementById('detalles').innerHTML = `<h2> Con ese código se encontró: </h2> ${miInventario.buscar(codigo).infoHTML()}`;
+        });
+        const btnList = document.getElementById('btnList');
+        btnList.addEventListener('click', () => {
+            // const listaDatos = miInventario.listar();
+            const detallesDiv = document.getElementById('detalles');
+            detallesDiv.innerHTML = "<h2> Inventario: </h2>";
+            // for (let i = 0; i < listaDatos.length; i++) {
+            //     const elementoHTML = listaDatos[i].infoHTML();
+            //     detallesDiv.innerHTML += elementoHTML;
+            // }
+            //otra forma de hacerlo
+            miInventario.datos.forEach(elemento => {
+                detallesDiv.innerHTML += elemento.infoHTML();
+            });
+            // miInventario.listar().forEach(elemento => {
+            //     detallesDiv.innerHTML += elemento.infoHTML();
+            // });
+        });
+    </script>
+</body>
+</html>
