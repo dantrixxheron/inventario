@@ -44,7 +44,11 @@
                 // this.datos.push(nuevo);
             }
             listar(){
-                return this.datos;
+                let lista="";
+                this.datos.forEach(elemento => {
+                lista += elemento.infoHTML();
+            });
+            return lista;
             }
             eliminar(codigo) {
                 for (let i = 0; i < this.datos.length; i++) {
@@ -116,15 +120,13 @@
         btnList.addEventListener('click', () => {
             // const listaDatos = miInventario.listar();
             const detallesDiv = document.getElementById('detalles');
-            detallesDiv.innerHTML = "<h2> Inventario: </h2>";
+            detallesDiv.innerHTML = "<h2> Inventario: </h2>"+miInventario.listar();
             // for (let i = 0; i < listaDatos.length; i++) {
             //     const elementoHTML = listaDatos[i].infoHTML();
             //     detallesDiv.innerHTML += elementoHTML;
             // }
             //otra forma de hacerlo
-            miInventario.datos.forEach(elemento => {
-                detallesDiv.innerHTML += elemento.infoHTML();
-            });
+            // detallesDiv.innerHTML=miInventario.listar();
             // miInventario.listar().forEach(elemento => {
             //     detallesDiv.innerHTML += elemento.infoHTML();
             // });
