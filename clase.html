@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let array=[[1.0, 1.1, 1.2, 1.3, 1.4],
+                   [2.0, 2.1, 2.2, 2.3, 2.4],
+                   [3.0, 3.1, 3.2, 3.3, 3.4], 
+                   [4.0, 4.1, 4.2, 4.3, 4.4], 
+                   [5.0, 5.1, 5.2, 5.3, 5.4]];
+        let primdiagonal="";
+        console.log(array);
+        //escribir un programa que imprima la diagonal principal de la matriz
+            for(let i=0; i<array.length;i++){
+                for (let j = 0; j < array[i].length; j++) {
+                    // primdiagonal+=`${array[]},`
+                    
+                }
+            }
+        console.log(primdiagonal);
+        //escribir un programa que imprima la diagonal inversa de la matriz
+
+
+        let valabajo="";
+        //escribir los datos que estan abajo de la principal
+        for (let i = 0; i <5; i++) {
+            for (let j = 0; j <i; j++) {
+                valabajo+=`${array[i][j]},`;
+            }
+            
+        }
+        console.log(valabajo);
+    </script>
+</body>
+</html>
