@@ -51,23 +51,43 @@
             return lista;
             }
             eliminar(codigo) {
-                for (let i = 0; i < this.datos.length; i++) {
-                    if (this.datos[i].codigo == codigo) {
-                        for (let j = i; j < this.datos.length - 1; j++) {
-                            this.datos[j] = this.datos[j + 1];
-                        }
-                        this.datos.pop();
-                        break;
-                    }
+                //modificar eliminar para hacer la búsqueda ordenada para que sea más eficiente
+                let i = 0;
+                while (i < this.datos.length && this.datos[i].codigo != codigo) {
+                    i++;
                 }
+                if (i < this.datos.length) {
+                    for (let j = i; j < this.datos.length - 1; j++) {
+                        this.datos[j] = this.datos[j + 1];
+                    }
+                    this.datos.pop();
+                }
+                // for (let i = 0; i < this.datos.length; i++) {
+                //     if (this.datos[i].codigo == codigo) {
+                //         for (let j = i; j < this.datos.length - 1; j++) {
+                //             this.datos[j] = this.datos[j + 1];
+                //         }
+                //         this.datos.pop();
+                //         break;
+                //     }
+                // }
             }
             buscar(codigo){
-                for (let i = 0; i < this.datos.length; i++) {
-                    if (this.datos[i].codigo == codigo) {
-                        return this.datos[i];
-                    }
+                //modificar buscar para hacer la búsqueda ordenada para que sea más eficiente
+                let i = 0;
+                while (i < this.datos.length && this.datos[i].codigo != codigo) {
+                    i++;
+                }
+                if (i < this.datos.length) {
+                    return this.datos[i];
                 }
                 return null;
+                // for (let i = 0; i < this.datos.length; i++) {
+                //     if (this.datos[i].codigo == codigo) {
+                //         return this.datos[i];
+                //     }
+                // }
+                // return null;
             }
         }
 
