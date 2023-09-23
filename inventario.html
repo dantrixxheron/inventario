@@ -19,8 +19,9 @@
         <button type="button" id="btnAdd">Agregar</button>
         <button type="button" id="btnDelete">Eliminar</button>
         <button type="button" id="btnSearch">Buscar</button> <br>
-        <button type="button" id="btnList">Mostrar inventario</button>
-        <button type="reset" id="reset">Resetear</button>
+        <button type="button" id="btnList">Listar</button>
+        <button type="button" id="btnListReverse">Listar inverso</button>
+        <button type="reset" id="reset">Limpiar</button>
     </form>
     <div id="detalles">
     </div>
@@ -29,26 +30,31 @@
             constructor(){
                 this.datos=[];
             }
+            //codigo para ir agregando ordenadamente por codigo de menor a mayor y que no se repita el código
             agregar(nuevo) {
-                //codigo para ir agregando ordenadamente por codigo
                 let i = 0;
                 while (i < this.datos.length && this.datos[i].codigo < nuevo.codigo) {
                     i++;
                 }
-                for (let j = this.datos.length; j > i; j--) {
-                    this.datos[j] = this.datos[j - 1];
+                if (i < this.datos.length && this.datos[i].codigo === nuevo.codigo) {
+                    return null; // Retorna null si el código ya está registrado
                 }
-                this.datos[i] = nuevo;
-
-                // //codigo para agregar sin ordenar
-                // this.datos.push(nuevo);
+                this.datos.splice(i, 0, nuevo);
+                return nuevo; // Retorna el objeto agregado
             }
             listar(){
                 let lista="";
-                this.datos.forEach(elemento => {
-                lista += elemento.infoHTML();
-            });
-            return lista;
+                for(let i=0; i<this.datos.length; i++){
+                    lista += this.datos[i].infoHTML();
+                }
+                return lista;
+            }
+            listarReverse(){
+                let listaReverse="";
+                for(let i=this.datos.length-1; i>=0; i--){
+                    listaReverse += this.datos[i].infoHTML();
+                }
+                return listaReverse;
             }
             eliminar(codigo) {
                 //modificar eliminar para hacer la búsqueda ordenada para que sea más eficiente
@@ -61,16 +67,9 @@
                         this.datos[j] = this.datos[j + 1];
                     }
                     this.datos.pop();
+                    return true;
                 }
-                // for (let i = 0; i < this.datos.length; i++) {
-                //     if (this.datos[i].codigo == codigo) {
-                //         for (let j = i; j < this.datos.length - 1; j++) {
-                //             this.datos[j] = this.datos[j + 1];
-                //         }
-                //         this.datos.pop();
-                //         break;
-                //     }
-                // }
+                return null;
             }
             buscar(codigo){
                 //modificar buscar para hacer la búsqueda ordenada para que sea más eficiente
@@ -82,12 +81,6 @@
                     return this.datos[i];
                 }
                 return null;
-                // for (let i = 0; i < this.datos.length; i++) {
-                //     if (this.datos[i].codigo == codigo) {
-                //         return this.datos[i];
-                //     }
-                // }
-                // return null;
             }
         }
 
@@ -119,14 +112,21 @@
             let cantidad = parseInt(document.getElementById('txtCantidad').value);
             let costo = parseFloat(document.getElementById('txtCosto').value);
             let producto = new Producto(codigo, nombre, cantidad, costo);
-            miInventario.agregar(producto);
-            document.getElementById('detalles').innerHTML = `<h2> Se añadió: </h2> ${producto.infoHTML()}`;
+
+            let resultado = miInventario.agregar(producto);
+            if (resultado === null) {
+                document.getElementById('detalles').innerHTML = "<h2> Ese código ya está registrado </h2>";
+            } else {
+                document.getElementById('detalles').innerHTML = `<h2> Se añadió: </h2> ${producto.infoHTML()}`;
+            }
         });
         const btnDelete = document.getElementById('btnDelete');
         btnDelete.addEventListener('click', () => {
             let codigo = parseInt(document.getElementById('txtCodigo').value);
-            miInventario.eliminar(codigo);
-            document.getElementById('detalles').innerHTML = `Se ha eliminado el artículo con el código ${codigo}`;
+            document.getElementById('detalles').innerHTML = `<h2> Se eliminará con el código: ${codigo} </h2>`;
+            let eliminar= miInventario.eliminar(codigo);
+            if(eliminar == null)
+            document.getElementById('detalles').innerHTML = `<h2> No se encontró ningún artículo con ese código </h2>`;
         });
         const btnSearch = document.getElementById('btnSearch');
         btnSearch.addEventListener('click', () => {
@@ -138,18 +138,13 @@
         });
         const btnList = document.getElementById('btnList');
         btnList.addEventListener('click', () => {
-            // const listaDatos = miInventario.listar();
             const detallesDiv = document.getElementById('detalles');
             detallesDiv.innerHTML = "<h2> Inventario: </h2>"+miInventario.listar();
-            // for (let i = 0; i < listaDatos.length; i++) {
-            //     const elementoHTML = listaDatos[i].infoHTML();
-            //     detallesDiv.innerHTML += elementoHTML;
-            // }
-            //otra forma de hacerlo
-            // detallesDiv.innerHTML=miInventario.listar();
-            // miInventario.listar().forEach(elemento => {
-            //     detallesDiv.innerHTML += elemento.infoHTML();
-            // });
+        });
+        const btnListReverse = document.getElementById('btnListReverse');
+        btnListReverse.addEventListener('click', () => {
+            const detallesDiv = document.getElementById('detalles');
+            detallesDiv.innerHTML = "<h2> Inventario: </h2>"+miInventario.listarReverse();
         });
     </script>
 </body>
